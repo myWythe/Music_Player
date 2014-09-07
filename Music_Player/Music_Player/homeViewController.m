@@ -15,8 +15,8 @@
 
 @implementation homeViewController
 
-@synthesize lab_title = _lab_title , lab_time = _lab_time , lab_lyc = _lab_lyc , process = _process , btn_pre = _btn_pre , btn_pause = _btn_pause , btn_next = _btn_next;
-@synthesize musicname = _musicname , previousindex = _previousindex, currentindex = _currentindex ,  slider = _slider , mytimer = _mytimer , musictime = _musictime , lyrics = _lyrics , t = _t;
+@synthesize lab_title = _lab_title , slider = _slider , lab_time = _lab_time , lab_lyc = _lab_lyc , btn_pre = _btn_pre , btn_pause = _btn_pause , btn_next = _btn_next;
+@synthesize musicname = _musicname , previousindex = _previousindex, currentindex = _currentindex , mytimer = _mytimer , musictime = _musictime , lyrics = _lyrics , t = _t;;
 
 //return the song numbre
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -97,7 +97,14 @@
      |UIViewAnimationOptionAutoreverse //动画重复自动反向，需要和上面这个一起用
      |UIViewAnimationOptionCurveLinear //动画的时间曲线，滚动字幕线性比较合理
                      animations:^{
-                         _lab_title.transform = CGAffineTransformMakeTranslation(100, 0);
+                         if (_lab_title.frame.origin.x == 0) {
+                         _lab_title.transform =
+                             CGAffineTransformMakeTranslation(-50, 0);
+                         }
+                         if (_lab_title.frame.origin.x == -50) {
+                             _lab_title.transform =
+                             CGAffineTransformMakeTranslation(50, 0);
+                         }
                      }
                      completion:^(BOOL finished) {
                          
@@ -296,6 +303,7 @@ static int n = 0;
     
     float time = _slider.value * _player.duration;
     
+    //updata the lyric when draging
     for (int i = 0; i < [_t count]; i++) {
         if (time < [[_t objectAtIndex:i] integerValue]) {
             if (i == 0) {
@@ -360,6 +368,7 @@ static int n = 0;
                     NSString *time = [NSString stringWithFormat:@"%@:%@.%@",minute,second,mm];
                     NSNumber *total =[NSNumber numberWithInteger:[minute integerValue] * 60 + [second integerValue]];
                     [_t addObject:total];
+                    
                     NSString *lyric = [item substringFromIndex:10];
                     
                     [_musictime addObject:time];
@@ -375,7 +384,6 @@ static int n = 0;
 //display time and lyric
 -(void)display
 {
-    NSLog(@"called");
     //get the percent that the song has been played
     float currenttime = _player.currentTime / _player.duration;
     
@@ -472,12 +480,13 @@ static int n = 0;
     
     //create imgview to contain title , slider buttons etc..
     UIImageView *img_container = [[UIImageView alloc]initWithFrame:CGRectMake(0, 60, 320, 250)];
-    img_container.image = [UIImage imageWithData:imgdata];
-    //img_container.image = [UIImage imageNamed:@"background.jpeg"];
+    //img_container.image = [UIImage imageWithData:imgdata];
+    img_container.image = [UIImage imageNamed:@"background.jpeg"];
     img_container.userInteractionEnabled = YES;
     
     //create and set title label
     _lab_title = [[UILabel alloc]initWithFrame:CGRectMake(0, 20, 320, 20)];
+    //[_lab_title setBackgroundColor:[UIColor redColor]];
     _lab_title.textAlignment = NSTextAlignmentCenter;
     [_lab_title setTextColor:[UIColor colorWithRed:102/256.0 green:102/256.0 blue:153/256.0 alpha:1]];
     

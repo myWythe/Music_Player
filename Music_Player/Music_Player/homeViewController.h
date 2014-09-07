@@ -23,13 +23,14 @@
 @property  UISlider *slider;
 @property  UILabel *lab_lyc;
 
-@property NSIndexPath *previousindex;
-@property NSIndexPath *currentindex;
 @property  AVAudioPlayer *player;
 
+@property NSIndexPath *previousindex;
+@property NSIndexPath *currentindex;
 @property NSMutableArray* musicname;
 @property NSTimer *mytimer;
 @property NSMutableArray *musictime;
 @property NSMutableArray *lyrics;
 @property NSMutableArray *t;
+
 @end
