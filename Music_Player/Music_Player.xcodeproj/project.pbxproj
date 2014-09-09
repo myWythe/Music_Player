@@ -203,11 +203,11 @@
 				FD36C0FF19BEE958000DEE4F /* SongTableViewCell.xib */,
 				FD36C0D819BEE8E8000DEE4F /* AppDelegate.h */,
 				FD36C0D919BEE8E8000DEE4F /* AppDelegate.m */,
-				FD36C0DB19BEE8E8000DEE4F /* Images.xcassets */,
-				FD36C0D019BEE8E8000DEE4F /* Supporting Files */,
 				FD36C0F819BEE938000DEE4F /* homeViewController.h */,
 				FD36C0F919BEE938000DEE4F /* homeViewController.m */,
 				FD36C0FA19BEE938000DEE4F /* homeViewController.xib */,
+				FD36C0DB19BEE8E8000DEE4F /* Images.xcassets */,
+				FD36C0D019BEE8E8000DEE4F /* Supporting Files */,
 			);
 			path = Music_Player;
 			sourceTree = "<group>";
