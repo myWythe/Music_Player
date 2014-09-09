@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import <AudioToolbox/AudioToolbox.h>
 
 @interface homeViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,AVAudioPlayerDelegate,UIActionSheetDelegate>
 

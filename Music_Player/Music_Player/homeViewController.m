@@ -444,6 +444,27 @@ static int n = 0;
 
 - (void)viewDidLoad
 {
+    //尝试读取mp3文件中的专辑图片
+    NSURL *fileURL = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:@"安和桥" ofType:@"mp3"]];
+    AudioFileTypeID fileTypeHint = kAudioFileMP3Type;
+    
+    AudioFileID fileID = nil;
+    OSStatus err = noErr;
+    
+    err = AudioFileOpenURL((__bridge CFURLRef)fileURL, kAudioFileReadPermission, 0, &fileID);
+    
+    UInt32 id3DataSize = 0;
+    err = AudioFileGetPropertyInfo(fileID, kAudioFilePropertyID3Tag, &id3DataSize, NULL);
+    NSDictionary *piDict = nil;
+    UInt32 piDataSize = sizeof(piDict);
+    err = AudioFileGetProperty(fileID, kAudioFilePropertyInfoDictionary, &piDataSize, &piDict);
+    CFDataRef AlbumPic = nil;
+    UInt32 picDataSize = sizeof(picDataSize);
+    err = AudioFileGetProperty(fileID, kAudioFilePropertyAlbumArtwork, &picDataSize, &AlbumPic);
+    NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:err userInfo:nil];
+    NSLog(@"Error: %@", [error description]);
+    NSData *imgdata = (__bridge NSData *)AlbumPic;
+    
     [super viewDidLoad];
     
     //scan and get the song name
@@ -451,7 +472,8 @@ static int n = 0;
     
     //create imgview to contain title , slider buttons etc..
     UIImageView *img_container = [[UIImageView alloc]initWithFrame:CGRectMake(0, 60, 320, 250)];
-    img_container.image = [UIImage imageNamed:@"background.jpeg"];
+    img_container.image = [UIImage imageWithData:imgdata];
+    //img_container.image = [UIImage imageNamed:@"background.jpeg"];
     img_container.userInteractionEnabled = YES;
     
     //create and set title label
