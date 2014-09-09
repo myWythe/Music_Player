@@ -375,6 +375,7 @@ static int n = 0;
 //display time and lyric
 -(void)display
 {
+    NSLog(@"called");
     //get the percent that the song has been played
     float currenttime = _player.currentTime / _player.duration;
     
