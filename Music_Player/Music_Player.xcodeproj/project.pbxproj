@@ -52,6 +52,8 @@
 		FD36C13719BEE9C0000DEE4F /* slider.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = FD36C11C19BEE9C0000DEE4F /* slider.jpeg */; };
 		FD36C13919BF1B36000DEE4F /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD36C13819BF1B36000DEE4F /* AVFoundation.framework */; };
 		FD36C13B19BF1C5C000DEE4F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD36C13A19BF1C5C000DEE4F /* AudioToolbox.framework */; };
+		FD74BD6119C06D2D0048F928 /* Yellow.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FD74BD6019C06D2D0048F928 /* Yellow.mp3 */; };
+		FD74BD6319C06D3A0048F928 /* Yellow.lrc in Resources */ = {isa = PBXBuildFile; fileRef = FD74BD6219C06D3A0048F928 /* Yellow.lrc */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -116,6 +118,8 @@
 		FD36C11C19BEE9C0000DEE4F /* slider.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = slider.jpeg; sourceTree = "<group>"; };
 		FD36C13819BF1B36000DEE4F /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		FD36C13A19BF1C5C000DEE4F /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		FD74BD6019C06D2D0048F928 /* Yellow.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Yellow.mp3; sourceTree = "<group>"; };
+		FD74BD6219C06D3A0048F928 /* Yellow.lrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Yellow.lrc; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +183,8 @@
 		FD36C0CF19BEE8E8000DEE4F /* Music_Player */ = {
 			isa = PBXGroup;
 			children = (
+				FD74BD6219C06D3A0048F928 /* Yellow.lrc */,
+				FD74BD6019C06D2D0048F928 /* Yellow.mp3 */,
 				FD36C10219BEE9C0000DEE4F /* 5mmcircle.png */,
 				FD36C10319BEE9C0000DEE4F /* 安和桥.lrc */,
 				FD36C10419BEE9C0000DEE4F /* 安和桥.mp3 */,
@@ -328,6 +334,7 @@
 				FD36C13319BEE9C0000DEE4F /* background.jpeg in Resources */,
 				FD36C13619BEE9C0000DEE4F /* play.tiff in Resources */,
 				FD36C12D19BEE9C0000DEE4F /* 连衣裙.lrc in Resources */,
+				FD74BD6119C06D2D0048F928 /* Yellow.mp3 in Resources */,
 				FD36C13419BEE9C0000DEE4F /* cell.jpg in Resources */,
 				FD36C13219BEE9C0000DEE4F /* 梦遗少年.mp3 in Resources */,
 				FD36C12519BEE9C0000DEE4F /* 鸽子.mp3 in Resources */,
@@ -355,6 +362,7 @@
 				FD36C12019BEE9C0000DEE4F /* 斑马,斑马.lrc in Resources */,
 				FD36C11D19BEE9C0000DEE4F /* 5mmcircle.png in Resources */,
 				FD36C12B19BEE9C0000DEE4F /* 莉莉安.lrc in Resources */,
+				FD74BD6319C06D3A0048F928 /* Yellow.lrc in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

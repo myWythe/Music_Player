@@ -6,15 +6,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Music_Player/homeViewController.m"
-            timestampString = "431956473.725795"
+            timestampString = "432044137.59272"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "447"
-            endingLineNumber = "447"
+            startingLineNumber = "529"
+            endingLineNumber = "529"
             landmarkName = "-viewDidLoad"
             landmarkType = "5">
          </BreakpointContent>
@@ -26,12 +26,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Music_Player/homeViewController.m"
-            timestampString = "431957218.673984"
+            timestampString = "432043700.242588"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "463"
-            endingLineNumber = "463"
-            landmarkName = "-viewDidLoad"
+            startingLineNumber = "69"
+            endingLineNumber = "69"
+            landmarkName = "-HandleSwipe:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

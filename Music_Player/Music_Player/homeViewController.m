@@ -18,6 +18,8 @@
 @synthesize lab_title = _lab_title , slider = _slider , lab_time = _lab_time , lab_lyc = _lab_lyc , btn_pre = _btn_pre , btn_pause = _btn_pause , btn_next = _btn_next;
 @synthesize musicname = _musicname , previousindex = _previousindex, currentindex = _currentindex , mytimer = _mytimer , musictime = _musictime , lyrics = _lyrics , t = _t;;
 
+#pragma mark delegate method
+
 //return the song numbre
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -54,7 +56,34 @@
     cell.selectionStyle = UITableViewCellAccessoryNone;
     [cell setBackgroundColor:[UIColor colorWithRed:250/256.0 green:255/256.0 blue:255/256.0 alpha:1]];
     
+    //add gesture
+    UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(HandleSwipe:)];
+    //[recognizer setDirection:UISwipeGestureRecognizerDirectionLeft];
+   // [cell addGestureRecognizer:recognizer];
+    
     return cell;
+}
+
+//action for swipe gesture
+-(void)HandleSwipe:(id)sender
+{
+    UISwipeGestureRecognizer *swipe = (UISwipeGestureRecognizer *)sender;
+    
+    CGPoint location = [swipe locationInView:_tab];
+    NSIndexPath *indexpath = [_tab indexPathForRowAtPoint:location];
+    if (indexpath) {
+        //get the cell out of the table view
+        SongTableViewCell *cell = (SongTableViewCell *)[_tab cellForRowAtIndexPath:indexpath];
+        
+        //cell.frame.origin.x = -100;
+    }
+    NSLog(@"%@",indexpath);
+    NSLog(@"recieve swipe gesture");
+}
+
+-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"delete");
 }
 
 //slelect action,once select a row,play the song
@@ -90,7 +119,7 @@
     _currentindex = indexPath;
     _previousindex = _currentindex;
     
-    //新加的代码，实现标题滚动，没有提交
+    //实现标题滚动，网上找到的
     [UIView animateWithDuration:3.0
                           delay:0
                         options:UIViewAnimationOptionRepeat //动画重复的主开关
@@ -167,6 +196,8 @@ static int n = 0;
         [_tab reloadData];
     }
 }
+
+#pragma mark button actions
 
 //action for button more
 -(void)btn_more_Onlick:(UIButton *)btn
@@ -329,6 +360,8 @@ static int n = 0;
     
 }
 
+#pragma mark parse and display lyric
+
 -(void)parselyric
 {
     NSString *path = [[NSBundle mainBundle]pathForResource:_lab_title.text ofType:@"lrc"];
@@ -452,26 +485,39 @@ static int n = 0;
 
 - (void)viewDidLoad
 {
-    //尝试读取mp3文件中的专辑图片
-    NSURL *fileURL = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:@"安和桥" ofType:@"mp3"]];
-    AudioFileTypeID fileTypeHint = kAudioFileMP3Type;
-    
-    AudioFileID fileID = nil;
-    OSStatus err = noErr;
-    
-    err = AudioFileOpenURL((__bridge CFURLRef)fileURL, kAudioFileReadPermission, 0, &fileID);
-    
-    UInt32 id3DataSize = 0;
-    err = AudioFileGetPropertyInfo(fileID, kAudioFilePropertyID3Tag, &id3DataSize, NULL);
-    NSDictionary *piDict = nil;
-    UInt32 piDataSize = sizeof(piDict);
-    err = AudioFileGetProperty(fileID, kAudioFilePropertyInfoDictionary, &piDataSize, &piDict);
-    CFDataRef AlbumPic = nil;
-    UInt32 picDataSize = sizeof(picDataSize);
-    err = AudioFileGetProperty(fileID, kAudioFilePropertyAlbumArtwork, &picDataSize, &AlbumPic);
-    NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:err userInfo:nil];
-    NSLog(@"Error: %@", [error description]);
-    NSData *imgdata = (__bridge NSData *)AlbumPic;
+//    //尝试读取mp3文件中的专辑图片
+//    NSURL *fileURL = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:@"Yellow" ofType:@"mp3"]];
+//    AudioFileTypeID fileTypeHint = kAudioFileMP3Type;
+//    
+//    AudioFileID fileID = nil;
+//    OSStatus err = noErr;
+//    
+//    err = AudioFileOpenURL((__bridge CFURLRef)fileURL, kAudioFileReadPermission, 0, &fileID);
+//    
+//    UInt32 id3DataSize = 0;
+//    err = AudioFileGetPropertyInfo(fileID, kAudioFilePropertyID3Tag, &id3DataSize, NULL);
+//    NSDictionary *piDict = nil;
+//    UInt32 piDataSize = sizeof(piDict);
+//    err = AudioFileGetProperty(fileID, kAudioFilePropertyInfoDictionary, &piDataSize, &piDict);
+//    CFDataRef AlbumPic = nil;
+//    UInt32 picDataSize = sizeof(picDataSize);
+//    err = AudioFileGetProperty(fileID, kAudioFilePropertyAlbumArtwork, &picDataSize, &AlbumPic);
+//    NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:err userInfo:nil];
+//    NSLog(@"Error: %@", [error description]);
+//    NSData *imgdata = (__bridge NSData *)AlbumPic;
+    //
+    UIImage *artImageInMp3;
+    NSURL *fileUrl = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:@"Yellow" ofType:@"mp3"]];
+    AVURLAsset *avURLAsset = [AVURLAsset URLAssetWithURL:fileUrl options:nil];
+    for (NSString *format in [avURLAsset availableMetadataFormats]) {
+        for (AVMetadataItem *metadataItem in [avURLAsset metadataForFormat:format]) {
+            if ([metadataItem.commonKey isEqualToString:@"artwork"]) {
+                artImageInMp3 = [UIImage imageWithData:[(NSDictionary*)metadataItem.value objectForKey:@"data"]];
+                NSLog(@"artImageInMp3 %@",artImageInMp3);
+                break;
+            }
+        }
+    }
     
     [super viewDidLoad];
     
@@ -480,8 +526,10 @@ static int n = 0;
     
     //create imgview to contain title , slider buttons etc..
     UIImageView *img_container = [[UIImageView alloc]initWithFrame:CGRectMake(0, 60, 320, 250)];
+    img_container.image = artImageInMp3;
+    img_container.alpha = 0.5;
     //img_container.image = [UIImage imageWithData:imgdata];
-    img_container.image = [UIImage imageNamed:@"background.jpeg"];
+    //img_container.image = [UIImage imageNamed:@"background.jpeg"];
     img_container.userInteractionEnabled = YES;
     
     //create and set title label
