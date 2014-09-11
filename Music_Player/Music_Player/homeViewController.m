@@ -8,14 +8,14 @@
 
 #import "homeViewController.h"
 #import "SongTableViewCell.h"
-//#import "LZXLrcItem.h"
+#import "lyricViewController.h"
 @interface homeViewController ()
 
 @end
 
 @implementation homeViewController
 
-@synthesize lab_title = _lab_title , slider = _slider , lab_time = _lab_time , lab_lyc = _lab_lyc , btn_pre = _btn_pre , btn_pause = _btn_pause , btn_next = _btn_next;
+@synthesize lab_title = _lab_title , lab_bottom_title = _lab_bottom_title , slider = _slider , lab_time = _lab_time , lab_lyc = _lab_lyc , btn_middle_pre = _btn_middle_pre , btn_middle_pause = _btn_middle_pause , btn_middle_next = _btn_middle_next , btn_bottom_pause = _btn_bottom_pause , btn_bottom_next = _btn_bottom_next;
 @synthesize musicname = _musicname , previousindex = _previousindex, currentindex = _currentindex , mytimer = _mytimer , musictime = _musictime , lyrics = _lyrics , t = _t;;
 
 #pragma mark delegate method
@@ -24,6 +24,11 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return [_musicname count];
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 1;
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -83,7 +88,18 @@
 
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"delete");
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        if ([_lab_title isEqual:((SongTableViewCell *)[tableView cellForRowAtIndexPath:indexPath]).lab_name.text]) {
+            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"fail to delete" message:@"the music is playing,can't be deleted" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [alert show];
+        } else {
+            NSString *name = [_musicname objectAtIndex:indexPath.row];
+            NSString *path = [NSString stringWithFormat:@"%@/%@.mp3",[[NSBundle mainBundle]resourcePath],name];
+            NSLog(@"%hhd",[[NSFileManager defaultManager]removeItemAtPath:path error:nil]);
+            [_musicname removeObjectAtIndex:indexPath.row];
+            [_tab reloadData];
+        }
+    }
 }
 
 //slelect action,once select a row,play the song
@@ -91,6 +107,7 @@
 {
     //set the song title
     _lab_title.text = [_musicname objectAtIndex:indexPath.row];
+    _lab_bottom_title.text = _lab_title.text;
     
     //once choose a song,parse the lyric set a timer,and it will call a theord every 1 second
     [self parselyric];
@@ -106,12 +123,13 @@
     
     //show the pause image for this row
     SongTableViewCell *currentcell =(SongTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
-    [currentcell.btn_status setBackgroundImage:[UIImage imageNamed:@"pause.tiff"] forState:UIControlStateNormal];
+    [currentcell.btn_status setBackgroundImage:[UIImage imageNamed:@"pause.png"] forState:UIControlStateNormal];
     currentcell.btn_status.hidden = NO;
     
     //set then button in center of the view to pause
-    [_btn_pause setBackgroundImage:[UIImage imageNamed:@"pause.tiff"] forState:UIControlStateNormal];
-    
+    [_btn_middle_pause setBackgroundImage:[UIImage imageNamed:@"pause.png"] forState:UIControlStateNormal];
+    [_btn_bottom_pause setBackgroundImage:[UIImage imageNamed:@"pause.png"] forState:UIControlStateNormal];
+    [_btn_bottom_next setBackgroundImage:[UIImage imageNamed:@"next.png"] forState:UIControlStateNormal];
     //hide the pause button in last song's cell
     ((SongTableViewCell *)[tableView cellForRowAtIndexPath:_previousindex]).btn_status.hidden = YES;
     
@@ -160,6 +178,7 @@
         
         //update the playing song name
         _lab_title.text = name;
+        _lab_bottom_title.text = _lab_title.text;
         
         //parse the lyric
         [self parselyric];
@@ -172,7 +191,7 @@
         
         //update the current indexpath and show the pause button with index
         _currentindex = [NSIndexPath indexPathForRow:index + 1 inSection:0];
-        [((SongTableViewCell *)[_tab cellForRowAtIndexPath:_currentindex]).btn_status setBackgroundImage:[UIImage imageNamed:@"pause.tiff"] forState:UIControlStateNormal];
+        [((SongTableViewCell *)[_tab cellForRowAtIndexPath:_currentindex]).btn_status setBackgroundImage:[UIImage imageNamed:@"pause.png"] forState:UIControlStateNormal];
         ((SongTableViewCell *)[_tab cellForRowAtIndexPath:_currentindex]).btn_status.hidden = NO;
         
         //set the cuurent indexpath to previous
@@ -183,6 +202,18 @@
 }
 
 static int n = 0;
+
+
+
+#pragma mark button actions
+
+//action for button more
+-(void)btn_more_Onlick:(UIButton *)btn
+{
+    n = btn.tag;
+    UIActionSheet *action = [[UIActionSheet alloc]initWithTitle:nil delegate:self cancelButtonTitle:@"cancel" destructiveButtonTitle:@"delete" otherButtonTitles: nil];
+    [action showInView:self.view];
+}
 
 //click at index
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -195,16 +226,6 @@ static int n = 0;
         [_musicname removeObjectAtIndex:n];
         [_tab reloadData];
     }
-}
-
-#pragma mark button actions
-
-//action for button more
--(void)btn_more_Onlick:(UIButton *)btn
-{
-    n = btn.tag;
-    UIActionSheet *action = [[UIActionSheet alloc]initWithTitle:nil delegate:self cancelButtonTitle:@"cancel" destructiveButtonTitle:@"delete" otherButtonTitles: nil];
-    [action showInView:self.view];
 }
 
 //action for button previous
@@ -225,7 +246,10 @@ static int n = 0;
             NSString *name = [_musicname objectAtIndex:index - 1];
             
             //update the playing song name
-            _lab_title.text = name;         NSURL *path = [[NSURL alloc]initFileURLWithPath:[[NSBundle mainBundle]pathForResource:name ofType:@"mp3"]];
+            _lab_title.text = name;
+            _lab_bottom_title.text = _lab_title.text;
+            
+            NSURL *path = [[NSURL alloc]initFileURLWithPath:[[NSBundle mainBundle]pathForResource:name ofType:@"mp3"]];
             
             //parse the lyric
             [self parselyric];
@@ -237,7 +261,7 @@ static int n = 0;
             
             //update the current indexpath and show the pause button with index
             _currentindex = [NSIndexPath indexPathForRow:index - 1 inSection:0];
-            [((SongTableViewCell *)[_tab cellForRowAtIndexPath:_currentindex]).btn_status setBackgroundImage:[UIImage imageNamed:@"pause.tiff"] forState:UIControlStateNormal];
+            [((SongTableViewCell *)[_tab cellForRowAtIndexPath:_currentindex]).btn_status setBackgroundImage:[UIImage imageNamed:@"pause.png"] forState:UIControlStateNormal];
             ((SongTableViewCell *)[_tab cellForRowAtIndexPath:_currentindex]).btn_status.hidden = NO;
             
             //set the cuurent indexpath to previous
@@ -266,6 +290,7 @@ static int n = 0;
             
             //update the playing song name
             _lab_title.text = name;
+            _lab_bottom_title.text = _lab_title.text;
             
             //parse the lyric
             [self parselyric];
@@ -278,7 +303,7 @@ static int n = 0;
             
             //update the current indexpath and show the pause button with index
             _currentindex = [NSIndexPath indexPathForRow:index + 1 inSection:0];
-            [((SongTableViewCell *)[_tab cellForRowAtIndexPath:_currentindex]).btn_status setBackgroundImage:[UIImage imageNamed:@"pause.tiff"] forState:UIControlStateNormal];
+            [((SongTableViewCell *)[_tab cellForRowAtIndexPath:_currentindex]).btn_status setBackgroundImage:[UIImage imageNamed:@"pause.png"] forState:UIControlStateNormal];
             ((SongTableViewCell *)[_tab cellForRowAtIndexPath:_currentindex]).btn_status.hidden = NO;
             
             //set the cuurent indexpath to previous
@@ -290,26 +315,30 @@ static int n = 0;
 //action for button play or pause
 -(void)play_or_pause_Onclick:(UIButton *)btn
 {
-    if ([[btn currentBackgroundImage] isEqual:[UIImage imageNamed:@"play.tiff"]]) {
-        
-        //change the button in cell to pause
-        [((SongTableViewCell *)[_tab cellForRowAtIndexPath:_currentindex]).btn_status setBackgroundImage:[UIImage imageNamed:@"pause.tiff"] forState:UIControlStateNormal];
-        //change the button in view to pause
-        [_btn_pause setBackgroundImage:[UIImage imageNamed:@"pause.tiff"] forState:UIControlStateNormal];
-        [_player play];
-        
-        //start the timer
-        [_mytimer setFireDate:[NSDate distantPast]];
-    } else {
+    if ([_player isPlaying]) {
         
         //change the button in cell to play
-        [((SongTableViewCell *)[_tab cellForRowAtIndexPath:_currentindex]).btn_status setBackgroundImage:[UIImage imageNamed:@"play.tiff"] forState:UIControlStateNormal];
+        [((SongTableViewCell *)[_tab cellForRowAtIndexPath:_currentindex]).btn_status setBackgroundImage:[UIImage imageNamed:@"play.png"] forState:UIControlStateNormal];
         //change the button in view to play
-        [_btn_pause setBackgroundImage:[UIImage imageNamed:@"play.tiff"] forState:UIControlStateNormal];
+        [_btn_middle_pause setBackgroundImage:[UIImage imageNamed:@"play.png"] forState:UIControlStateNormal];
+        [_btn_bottom_pause setBackgroundImage:[UIImage imageNamed:@"play.png"] forState:UIControlStateNormal];
         [_player pause];
         
         //stop the timer
         [_mytimer setFireDate:[NSDate distantFuture]];
+        
+
+    } else {
+        
+        //change the button in cell to pause
+        [((SongTableViewCell *)[_tab cellForRowAtIndexPath:_currentindex]).btn_status setBackgroundImage:[UIImage imageNamed:@"pause.png"] forState:UIControlStateNormal];
+        //change the button in view to pause
+        [_btn_middle_pause setBackgroundImage:[UIImage imageNamed:@"pause.png"] forState:UIControlStateNormal];
+        [_btn_bottom_pause setBackgroundImage:[UIImage imageNamed:@"pause.png"] forState:UIControlStateNormal];
+        [_player play];
+        
+        //start the timer
+        [_mytimer setFireDate:[NSDate distantPast]];
     }
     
 }
@@ -505,7 +534,7 @@ static int n = 0;
 //    NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:err userInfo:nil];
 //    NSLog(@"Error: %@", [error description]);
 //    NSData *imgdata = (__bridge NSData *)AlbumPic;
-    //
+    //下面的可以获取专辑图片，上面的可以获取专辑名等信息
     UIImage *artImageInMp3;
     NSURL *fileUrl = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:@"Yellow" ofType:@"mp3"]];
     AVURLAsset *avURLAsset = [AVURLAsset URLAssetWithURL:fileUrl options:nil];
@@ -526,10 +555,10 @@ static int n = 0;
     
     //create imgview to contain title , slider buttons etc..
     UIImageView *img_container = [[UIImageView alloc]initWithFrame:CGRectMake(0, 60, 320, 250)];
-    img_container.image = artImageInMp3;
-    img_container.alpha = 0.5;
+//    img_container.image = artImageInMp3;
+//    img_container.alpha = 0.5;
     //img_container.image = [UIImage imageWithData:imgdata];
-    //img_container.image = [UIImage imageNamed:@"background.jpeg"];
+    img_container.image = [UIImage imageNamed:@"background.jpeg"];
     img_container.userInteractionEnabled = YES;
     
     //create and set title label
@@ -555,24 +584,57 @@ static int n = 0;
     _lab_lyc.adjustsFontSizeToFitWidth = YES;
     
     //prevoius song button
-    _btn_pre = [UIButton buttonWithType:UIButtonTypeSystem];
-    [_btn_pre addTarget:self action:@selector(previous_Onclick) forControlEvents:UIControlEventTouchUpInside];
-    [_btn_pre setTitle:@"previous" forState:UIControlStateNormal];
-    _btn_pre.frame = CGRectMake(20, 140, 80, 30);
+    _btn_middle_pre = [UIButton buttonWithType:UIButtonTypeSystem];
+    [_btn_middle_pre addTarget:self action:@selector(previous_Onclick) forControlEvents:UIControlEventTouchUpInside];
+    [_btn_middle_pre setBackgroundImage:[UIImage imageNamed:@"previous.png"] forState:UIControlStateNormal];
+    //[_btn_pre setTitle:@"previous" forState:UIControlStateNormal];
+    _btn_middle_pre.frame = CGRectMake(20, 140, 30, 30);
     
     //pause or play button
-    _btn_pause = [UIButton buttonWithType:UIButtonTypeSystem];
-    [_btn_pause addTarget:self action:@selector(play_or_pause_Onclick:) forControlEvents:UIControlEventTouchUpInside];
-    _btn_pause.frame = CGRectMake(150, 140, 30, 30);
+    _btn_middle_pause = [UIButton buttonWithType:UIButtonTypeSystem];
+    [_btn_middle_pause addTarget:self action:@selector(play_or_pause_Onclick:) forControlEvents:UIControlEventTouchUpInside];
+    _btn_middle_pause.frame = CGRectMake(150, 140, 30, 30);
     
     //next song button
-    _btn_next = [UIButton buttonWithType:UIButtonTypeSystem];
-    [_btn_next setTitle:@"next" forState:UIControlStateNormal];
-    [_btn_next addTarget:self action:@selector(next_Onclick) forControlEvents:UIControlEventTouchUpInside];
-    _btn_next.frame = CGRectMake(230, 140, 80, 30);
+    _btn_middle_next = [UIButton buttonWithType:UIButtonTypeSystem];
+    //[_btn_next setTitle:@"next" forState:UIControlStateNormal];
+    [_btn_middle_next setBackgroundImage:[UIImage imageNamed:@"next.png"] forState:UIControlStateNormal];
+    [_btn_middle_next addTarget:self action:@selector(next_Onclick)
+        forControlEvents:UIControlEventTouchUpInside];
+    _btn_middle_next.frame = CGRectMake(270, 140, 30, 30);
+    
+    NSLog(@"%f",self.view.frame.size.height);
+    
+    UIImageView *img_status = [[UIImageView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height-50, 320, 50)];
+    [img_status setBackgroundColor:[UIColor clearColor]];
+    UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(jump:)];
+    recognizer.Direction = UISwipeGestureRecognizerDirectionUp;
+    img_status.userInteractionEnabled =YES;
+    [img_status addGestureRecognizer:recognizer];
+    
+    UIImageView *img_albumpic = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 50, 50)];
+    img_albumpic.image = artImageInMp3;
+    
+    _lab_bottom_title = [[UILabel alloc]initWithFrame:CGRectMake(55, 10,130, 15)];
+    _lab_bottom_title.text = _lab_title.text;
+    _lab_bottom_title.adjustsFontSizeToFitWidth = YES;
+    
+    _btn_bottom_pause = [UIButton buttonWithType:UIButtonTypeSystem];
+    _btn_bottom_pause.frame = CGRectMake(220, 10, 30, 30);
+    [_btn_bottom_pause addTarget:self action:@selector(play_or_pause_Onclick:) forControlEvents:UIControlEventTouchUpInside];
+    //btn_botton_play setBackgroundImage:[UIImage ] forState:[
+    
+    _btn_bottom_next = [UIButton buttonWithType:UIButtonTypeSystem];
+    _btn_bottom_next.frame = CGRectMake(280, 10, 30, 30);
+    [_btn_bottom_next addTarget:self action:@selector(next_Onclick) forControlEvents:UIControlEventTouchUpInside];
+    
+    [img_status addSubview:img_albumpic];
+    [img_status addSubview:_lab_bottom_title];
+    [img_status addSubview:_btn_bottom_pause];
+    [img_status addSubview:_btn_bottom_next];
     
     //create table view
-    _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 250, 320, 300) style:UITableViewStylePlain];
+    _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 250, 350, 270) style:UITableViewStylePlain];
     _tab.delegate = self;
     _tab.dataSource = self;
     
@@ -581,13 +643,42 @@ static int n = 0;
     [img_container addSubview:_lab_time];
     [img_container addSubview:_slider];
     [img_container addSubview:_lab_lyc];
-    [img_container addSubview:_btn_pre];
-    [img_container addSubview:_btn_pause];
-    [img_container addSubview:_btn_next];
+    [img_container addSubview:_btn_middle_pre];
+    [img_container addSubview:_btn_middle_pause];
+    [img_container addSubview:_btn_middle_next];
     
     [self.view addSubview:img_container];
     
     [self.view addSubview:_tab];
+    
+    [self.view addSubview:img_status];
+}
+
+-(void)jump:(id)sender
+{
+    lyricViewController *detallyric = [[lyricViewController alloc]initWithNibName:@"lyricViewController" bundle:nil];
+    detallyric.lyrics = [[NSMutableArray alloc]initWithArray:_lyrics];
+    detallyric.musictime = [[NSMutableArray alloc]initWithArray:_musictime];
+    detallyric.player = _player;
+    detallyric.musicname = _lab_title.text;
+   // [self.navigationController pushViewController:detallyric animated:YES];
+    
+    detallyric.view.frame = CGRectOffset(self.view.frame,0 , self.view.frame.size.height);
+    float height = self.view.frame.size.height;
+    [UIView animateWithDuration:0.3f
+                          delay:0
+                        options:UIViewAnimationCurveEaseInOut
+                     animations:^{
+                         
+                        // [self.view addSubview:detallyric.view];
+                         [self.navigationController pushViewController:detallyric animated:YES];
+                         detallyric.view.center = CGPointMake(detallyric.view.center.x, detallyric.view.center.y - height);
+                     }
+                     completion:^(BOOL finished) {
+                         
+                         
+                     }];
+    
 }
 
 - (void)didReceiveMemoryWarning

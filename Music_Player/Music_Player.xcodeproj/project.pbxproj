@@ -52,6 +52,12 @@
 		FD36C13719BEE9C0000DEE4F /* slider.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = FD36C11C19BEE9C0000DEE4F /* slider.jpeg */; };
 		FD36C13919BF1B36000DEE4F /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD36C13819BF1B36000DEE4F /* AVFoundation.framework */; };
 		FD36C13B19BF1C5C000DEE4F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD36C13A19BF1C5C000DEE4F /* AudioToolbox.framework */; };
+		FD427FFC19C1394F0014CE84 /* next.png in Resources */ = {isa = PBXBuildFile; fileRef = FD427FF819C1394F0014CE84 /* next.png */; };
+		FD427FFD19C1394F0014CE84 /* pause.png in Resources */ = {isa = PBXBuildFile; fileRef = FD427FF919C1394F0014CE84 /* pause.png */; };
+		FD427FFE19C1394F0014CE84 /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = FD427FFA19C1394F0014CE84 /* play.png */; };
+		FD427FFF19C1394F0014CE84 /* previous.png in Resources */ = {isa = PBXBuildFile; fileRef = FD427FFB19C1394F0014CE84 /* previous.png */; };
+		FD42800319C13ECF0014CE84 /* lyricViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FD42800119C13ECF0014CE84 /* lyricViewController.m */; };
+		FD42800419C13ECF0014CE84 /* lyricViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FD42800219C13ECF0014CE84 /* lyricViewController.xib */; };
 		FD74BD6119C06D2D0048F928 /* Yellow.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FD74BD6019C06D2D0048F928 /* Yellow.mp3 */; };
 		FD74BD6319C06D3A0048F928 /* Yellow.lrc in Resources */ = {isa = PBXBuildFile; fileRef = FD74BD6219C06D3A0048F928 /* Yellow.lrc */; };
 /* End PBXBuildFile section */
@@ -118,6 +124,13 @@
 		FD36C11C19BEE9C0000DEE4F /* slider.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = slider.jpeg; sourceTree = "<group>"; };
 		FD36C13819BF1B36000DEE4F /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		FD36C13A19BF1C5C000DEE4F /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		FD427FF819C1394F0014CE84 /* next.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = next.png; sourceTree = "<group>"; };
+		FD427FF919C1394F0014CE84 /* pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause.png; sourceTree = "<group>"; };
+		FD427FFA19C1394F0014CE84 /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play.png; sourceTree = "<group>"; };
+		FD427FFB19C1394F0014CE84 /* previous.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = previous.png; sourceTree = "<group>"; };
+		FD42800019C13ECF0014CE84 /* lyricViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lyricViewController.h; sourceTree = "<group>"; };
+		FD42800119C13ECF0014CE84 /* lyricViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = lyricViewController.m; sourceTree = "<group>"; };
+		FD42800219C13ECF0014CE84 /* lyricViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = lyricViewController.xib; sourceTree = "<group>"; };
 		FD74BD6019C06D2D0048F928 /* Yellow.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Yellow.mp3; sourceTree = "<group>"; };
 		FD74BD6219C06D3A0048F928 /* Yellow.lrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Yellow.lrc; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -183,35 +196,9 @@
 		FD36C0CF19BEE8E8000DEE4F /* Music_Player */ = {
 			isa = PBXGroup;
 			children = (
-				FD74BD6219C06D3A0048F928 /* Yellow.lrc */,
-				FD74BD6019C06D2D0048F928 /* Yellow.mp3 */,
-				FD36C10219BEE9C0000DEE4F /* 5mmcircle.png */,
-				FD36C10319BEE9C0000DEE4F /* 安和桥.lrc */,
-				FD36C10419BEE9C0000DEE4F /* 安和桥.mp3 */,
-				FD36C10519BEE9C0000DEE4F /* 斑马,斑马.lrc */,
-				FD36C10619BEE9C0000DEE4F /* 斑马,斑马.mp3 */,
-				FD36C10719BEE9C0000DEE4F /* 董小姐.lrc */,
-				FD36C10819BEE9C0000DEE4F /* 董小姐.mp3 */,
-				FD36C10919BEE9C0000DEE4F /* 鸽子.lrc */,
-				FD36C10A19BEE9C0000DEE4F /* 鸽子.mp3 */,
-				FD36C10B19BEE9C0000DEE4F /* 给抱着盒子的姑娘.mp3 */,
-				FD36C10C19BEE9C0000DEE4F /* 关忆北.lrc */,
-				FD36C10D19BEE9C0000DEE4F /* 关忆北.mp3 */,
-				FD36C10E19BEE9C0000DEE4F /* 卡比巴拉的海.lrc */,
-				FD36C10F19BEE9C0000DEE4F /* 卡比巴拉的海.mp3 */,
-				FD36C11019BEE9C0000DEE4F /* 莉莉安.lrc */,
-				FD36C11119BEE9C0000DEE4F /* 莉莉安.mp3 */,
-				FD36C11219BEE9C0000DEE4F /* 连衣裙.lrc */,
-				FD36C11319BEE9C0000DEE4F /* 连衣裙.mp3 */,
-				FD36C11419BEE9C0000DEE4F /* 六层楼.lrc */,
-				FD36C11519BEE9C0000DEE4F /* 六层楼.mp3 */,
-				FD36C11619BEE9C0000DEE4F /* 梦遗少年.lrc */,
-				FD36C11719BEE9C0000DEE4F /* 梦遗少年.mp3 */,
-				FD36C11819BEE9C0000DEE4F /* background.jpeg */,
-				FD36C11919BEE9C0000DEE4F /* cell.jpg */,
-				FD36C11A19BEE9C0000DEE4F /* pause.tiff */,
-				FD36C11B19BEE9C0000DEE4F /* play.tiff */,
-				FD36C11C19BEE9C0000DEE4F /* slider.jpeg */,
+				FD42800019C13ECF0014CE84 /* lyricViewController.h */,
+				FD42800119C13ECF0014CE84 /* lyricViewController.m */,
+				FD42800219C13ECF0014CE84 /* lyricViewController.xib */,
 				FD36C0F819BEE938000DEE4F /* homeViewController.h */,
 				FD36C0F919BEE938000DEE4F /* homeViewController.m */,
 				FD36C0FA19BEE938000DEE4F /* homeViewController.xib */,
@@ -221,6 +208,7 @@
 				FD36C0D819BEE8E8000DEE4F /* AppDelegate.h */,
 				FD36C0D919BEE8E8000DEE4F /* AppDelegate.m */,
 				FD36C0DB19BEE8E8000DEE4F /* Images.xcassets */,
+				FD42800519C16CCD0014CE84 /* resourse */,
 				FD36C0D019BEE8E8000DEE4F /* Supporting Files */,
 			);
 			path = Music_Player;
@@ -253,6 +241,46 @@
 				FD36C0EB19BEE8E8000DEE4F /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		FD42800519C16CCD0014CE84 /* resourse */ = {
+			isa = PBXGroup;
+			children = (
+				FD427FF819C1394F0014CE84 /* next.png */,
+				FD427FF919C1394F0014CE84 /* pause.png */,
+				FD427FFA19C1394F0014CE84 /* play.png */,
+				FD427FFB19C1394F0014CE84 /* previous.png */,
+				FD74BD6219C06D3A0048F928 /* Yellow.lrc */,
+				FD74BD6019C06D2D0048F928 /* Yellow.mp3 */,
+				FD36C10219BEE9C0000DEE4F /* 5mmcircle.png */,
+				FD36C10319BEE9C0000DEE4F /* 安和桥.lrc */,
+				FD36C10419BEE9C0000DEE4F /* 安和桥.mp3 */,
+				FD36C10519BEE9C0000DEE4F /* 斑马,斑马.lrc */,
+				FD36C10619BEE9C0000DEE4F /* 斑马,斑马.mp3 */,
+				FD36C10719BEE9C0000DEE4F /* 董小姐.lrc */,
+				FD36C10819BEE9C0000DEE4F /* 董小姐.mp3 */,
+				FD36C10919BEE9C0000DEE4F /* 鸽子.lrc */,
+				FD36C10A19BEE9C0000DEE4F /* 鸽子.mp3 */,
+				FD36C10B19BEE9C0000DEE4F /* 给抱着盒子的姑娘.mp3 */,
+				FD36C10C19BEE9C0000DEE4F /* 关忆北.lrc */,
+				FD36C10D19BEE9C0000DEE4F /* 关忆北.mp3 */,
+				FD36C10E19BEE9C0000DEE4F /* 卡比巴拉的海.lrc */,
+				FD36C10F19BEE9C0000DEE4F /* 卡比巴拉的海.mp3 */,
+				FD36C11019BEE9C0000DEE4F /* 莉莉安.lrc */,
+				FD36C11119BEE9C0000DEE4F /* 莉莉安.mp3 */,
+				FD36C11219BEE9C0000DEE4F /* 连衣裙.lrc */,
+				FD36C11319BEE9C0000DEE4F /* 连衣裙.mp3 */,
+				FD36C11419BEE9C0000DEE4F /* 六层楼.lrc */,
+				FD36C11519BEE9C0000DEE4F /* 六层楼.mp3 */,
+				FD36C11619BEE9C0000DEE4F /* 梦遗少年.lrc */,
+				FD36C11719BEE9C0000DEE4F /* 梦遗少年.mp3 */,
+				FD36C11819BEE9C0000DEE4F /* background.jpeg */,
+				FD36C11919BEE9C0000DEE4F /* cell.jpg */,
+				FD36C11A19BEE9C0000DEE4F /* pause.tiff */,
+				FD36C11B19BEE9C0000DEE4F /* play.tiff */,
+				FD36C11C19BEE9C0000DEE4F /* slider.jpeg */,
+			);
+			name = resourse;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -346,7 +374,9 @@
 				FD36C12819BEE9C0000DEE4F /* 关忆北.mp3 in Resources */,
 				FD36C12419BEE9C0000DEE4F /* 鸽子.lrc in Resources */,
 				FD36C12219BEE9C0000DEE4F /* 董小姐.lrc in Resources */,
+				FD42800419C13ECF0014CE84 /* lyricViewController.xib in Resources */,
 				FD36C12F19BEE9C0000DEE4F /* 六层楼.lrc in Resources */,
+				FD427FFD19C1394F0014CE84 /* pause.png in Resources */,
 				FD36C0FC19BEE938000DEE4F /* homeViewController.xib in Resources */,
 				FD36C12319BEE9C0000DEE4F /* 董小姐.mp3 in Resources */,
 				FD36C12919BEE9C0000DEE4F /* 卡比巴拉的海.lrc in Resources */,
@@ -358,8 +388,11 @@
 				FD36C13119BEE9C0000DEE4F /* 梦遗少年.lrc in Resources */,
 				FD36C12A19BEE9C0000DEE4F /* 卡比巴拉的海.mp3 in Resources */,
 				FD36C12119BEE9C0000DEE4F /* 斑马,斑马.mp3 in Resources */,
+				FD427FFE19C1394F0014CE84 /* play.png in Resources */,
 				FD36C0DC19BEE8E8000DEE4F /* Images.xcassets in Resources */,
 				FD36C12019BEE9C0000DEE4F /* 斑马,斑马.lrc in Resources */,
+				FD427FFC19C1394F0014CE84 /* next.png in Resources */,
+				FD427FFF19C1394F0014CE84 /* previous.png in Resources */,
 				FD36C11D19BEE9C0000DEE4F /* 5mmcircle.png in Resources */,
 				FD36C12B19BEE9C0000DEE4F /* 莉莉安.lrc in Resources */,
 				FD74BD6319C06D3A0048F928 /* Yellow.lrc in Resources */,
@@ -382,6 +415,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FD36C10019BEE958000DEE4F /* SongTableViewCell.m in Sources */,
+				FD42800319C13ECF0014CE84 /* lyricViewController.m in Sources */,
 				FD36C0DA19BEE8E8000DEE4F /* AppDelegate.m in Sources */,
 				FD36C0D619BEE8E8000DEE4F /* main.m in Sources */,
 				FD36C0FB19BEE938000DEE4F /* homeViewController.m in Sources */,
