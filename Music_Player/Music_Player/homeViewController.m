@@ -61,11 +61,6 @@
     cell.selectionStyle = UITableViewCellAccessoryNone;
     [cell setBackgroundColor:[UIColor colorWithRed:250/256.0 green:255/256.0 blue:255/256.0 alpha:1]];
     
-    //add gesture
-    UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(HandleSwipe:)];
-    //[recognizer setDirection:UISwipeGestureRecognizerDirectionLeft];
-   // [cell addGestureRecognizer:recognizer];
-    
     return cell;
 }
 
@@ -549,7 +544,9 @@ static int n = 0;
     }
     
     [super viewDidLoad];
-    
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor colorWithRed:102/256.0 green:102/256.0 blue:153/256.0 alpha:1] forKey:NSForegroundColorAttributeName]];
+    self.navigationItem.title = @"有妖气播放器";
+
     //scan and get the song name
     [self getMusicName];
     
@@ -603,14 +600,21 @@ static int n = 0;
         forControlEvents:UIControlEventTouchUpInside];
     _btn_middle_next.frame = CGRectMake(270, 140, 30, 30);
     
-    NSLog(@"%f",self.view.frame.size.height);
     
-    UIImageView *img_status = [[UIImageView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height-50, 320, 50)];
-    [img_status setBackgroundColor:[UIColor clearColor]];
-    UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(jump:)];
-    recognizer.Direction = UISwipeGestureRecognizerDirectionUp;
-    img_status.userInteractionEnabled =YES;
-    [img_status addGestureRecognizer:recognizer];
+//    UIImageView *img_status = [[UIImageView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height-50, 320, 50)];
+//    [img_status setBackgroundColor:[UIColor clearColor]];
+//    UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(jump:)];
+//    recognizer.Direction = UISwipeGestureRecognizerDirectionUp;
+//    img_status.userInteractionEnabled =YES;
+//    [img_status addGestureRecognizer:recognizer];
+    
+        UIButton *btn_bottom_conteiner = [[UIButton alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height-50, 320, 50)];
+        [btn_bottom_conteiner setBackgroundColor:[UIColor clearColor]];
+        UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(jump:)];
+        recognizer.Direction = UISwipeGestureRecognizerDirectionUp;
+        btn_bottom_conteiner.userInteractionEnabled =YES;
+        [btn_bottom_conteiner addGestureRecognizer:recognizer];
+    [btn_bottom_conteiner addTarget:self action:@selector(jump:) forControlEvents:UIControlEventTouchUpInside];
     
     UIImageView *img_albumpic = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 50, 50)];
     img_albumpic.image = artImageInMp3;
@@ -628,10 +632,15 @@ static int n = 0;
     _btn_bottom_next.frame = CGRectMake(280, 10, 30, 30);
     [_btn_bottom_next addTarget:self action:@selector(next_Onclick) forControlEvents:UIControlEventTouchUpInside];
     
-    [img_status addSubview:img_albumpic];
-    [img_status addSubview:_lab_bottom_title];
-    [img_status addSubview:_btn_bottom_pause];
-    [img_status addSubview:_btn_bottom_next];
+//    [img_status addSubview:img_albumpic];
+//    [img_status addSubview:_lab_bottom_title];
+//    [img_status addSubview:_btn_bottom_pause];
+//    [img_status addSubview:_btn_bottom_next];
+    
+    [btn_bottom_conteiner addSubview:img_albumpic];
+    [btn_bottom_conteiner addSubview:_lab_bottom_title];
+    [btn_bottom_conteiner addSubview:_btn_bottom_pause];
+    [btn_bottom_conteiner addSubview:_btn_bottom_next];
     
     //create table view
     _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 250, 350, 270) style:UITableViewStylePlain];
@@ -651,7 +660,7 @@ static int n = 0;
     
     [self.view addSubview:_tab];
     
-    [self.view addSubview:img_status];
+    [self.view addSubview:btn_bottom_conteiner];
 }
 
 -(void)jump:(id)sender
@@ -661,25 +670,35 @@ static int n = 0;
     detallyric.musictime = [[NSMutableArray alloc]initWithArray:_musictime];
     detallyric.player = _player;
     detallyric.musicname = _lab_title.text;
-   // [self.navigationController pushViewController:detallyric animated:YES];
-    
-    detallyric.view.frame = CGRectOffset(self.view.frame,0 , self.view.frame.size.height);
-    float height = self.view.frame.size.height;
-    [UIView animateWithDuration:0.3f
-                          delay:0
-                        options:UIViewAnimationCurveEaseInOut
-                     animations:^{
-                         
-                        // [self.view addSubview:detallyric.view];
-                         [self.navigationController pushViewController:detallyric animated:YES];
-                         detallyric.view.center = CGPointMake(detallyric.view.center.x, detallyric.view.center.y - height);
-                     }
-                     completion:^(BOOL finished) {
-                         
-                         
-                     }];
+    //[self.navigationController pushViewController:detallyric animated:YES];
+
+    if ([sender isKindOfClass:[UIButton class]]) {
+        [UIView animateWithDuration:0.8f
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.navigationController.view cache:NO];
+                         }
+                         completion:^(BOOL finished) {
+                         }];
+    }
+    else if ([sender isKindOfClass:[UISwipeGestureRecognizer class]])
+    {
+        [UIView animateWithDuration:1.0f
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                              [UIView setAnimationTransition:UIViewAnimationTransitionCurlUp forView:self.navigationController.view cache:NO];
+                         }
+                         completion:^(BOOL finished) {
+                             
+                         }];
+    }
+    [self.navigationController pushViewController:detallyric animated:YES];
     
 }
+
+
 
 - (void)didReceiveMemoryWarning
 {

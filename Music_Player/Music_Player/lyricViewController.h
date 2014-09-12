@@ -11,11 +11,13 @@
 
 @interface lyricViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
 
-@property (weak, nonatomic) IBOutlet UITableView *tab;
+@property UITableView *tab;
 
 @property NSMutableArray *lyrics;
 @property NSMutableArray *musictime;
 @property NSString *musicname;
+@property BOOL gestureback;
+@property NSTimer *mytimer;
 
 @property AVAudioPlayer *player;
 

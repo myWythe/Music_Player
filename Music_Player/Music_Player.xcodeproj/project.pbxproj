@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FD1887A819C316A9005FBF7F /* lyric.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FD1887A719C316A9005FBF7F /* lyric.jpg */; };
 		FD36C0CA19BEE8E8000DEE4F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD36C0C919BEE8E8000DEE4F /* Foundation.framework */; };
 		FD36C0CC19BEE8E8000DEE4F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD36C0CB19BEE8E8000DEE4F /* CoreGraphics.framework */; };
 		FD36C0CE19BEE8E8000DEE4F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD36C0CD19BEE8E8000DEE4F /* UIKit.framework */; };
@@ -73,6 +74,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		FD1887A719C316A9005FBF7F /* lyric.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = lyric.jpg; sourceTree = "<group>"; };
 		FD36C0C619BEE8E8000DEE4F /* Music_Player.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Music_Player.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD36C0C919BEE8E8000DEE4F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		FD36C0CB19BEE8E8000DEE4F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -196,6 +198,7 @@
 		FD36C0CF19BEE8E8000DEE4F /* Music_Player */ = {
 			isa = PBXGroup;
 			children = (
+				FD1887A719C316A9005FBF7F /* lyric.jpg */,
 				FD42800019C13ECF0014CE84 /* lyricViewController.h */,
 				FD42800119C13ECF0014CE84 /* lyricViewController.m */,
 				FD42800219C13ECF0014CE84 /* lyricViewController.xib */,
@@ -380,6 +383,7 @@
 				FD36C0FC19BEE938000DEE4F /* homeViewController.xib in Resources */,
 				FD36C12319BEE9C0000DEE4F /* 董小姐.mp3 in Resources */,
 				FD36C12919BEE9C0000DEE4F /* 卡比巴拉的海.lrc in Resources */,
+				FD1887A819C316A9005FBF7F /* lyric.jpg in Resources */,
 				FD36C0D419BEE8E8000DEE4F /* InfoPlist.strings in Resources */,
 				FD36C13719BEE9C0000DEE4F /* slider.jpeg in Resources */,
 				FD36C11F19BEE9C0000DEE4F /* 安和桥.mp3 in Resources */,
