@@ -386,57 +386,57 @@ static int n = 0;
 
 #pragma mark parse and display lyric
 
--(void)parselyric
-{
-    NSString *path = [[NSBundle mainBundle]pathForResource:_lab_title.text ofType:@"lrc"];
-    
-    //if lyric file exits
-    if ([path length]) {
+    -(void)parselyric
+    {
+        NSString *path = [[NSBundle mainBundle]pathForResource:_lab_title.text ofType:@"lrc"];
         
-        //get the lyric string
-        NSString *lyc = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-        
-        //init
-        _musictime = [[NSMutableArray alloc]init];
-        _lyrics = [[NSMutableArray alloc]init];
-        _t = [[NSMutableArray alloc]init];
-        
-        NSArray *arr = [lyc componentsSeparatedByString:@"\n"];
-        
-        for (NSString *item in arr) {
+        //if lyric file exits
+        if ([path length]) {
             
-            //if item is not empty
-            if ([item length]) {
+            //get the lyric string
+            NSString *lyc = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+            
+            //init
+            _musictime = [[NSMutableArray alloc]init];
+            _lyrics = [[NSMutableArray alloc]init];
+            _t = [[NSMutableArray alloc]init];
+            
+            NSArray *arr = [lyc componentsSeparatedByString:@"\n"];
+            
+            for (NSString *item in arr) {
                 
-                NSRange startrange = [item rangeOfString:@"["];
-                NSLog(@"%d%d",startrange.length,startrange.location);
-                NSRange stoprange = [item rangeOfString:@"]"];
-                
-                NSString *content = [item substringWithRange:NSMakeRange(startrange.location+1, stoprange.location-startrange.location-1)];
-                
-                NSLog(@"%d",[item length]);
-                
-                //the music time format is mm.ss.xx such as 00:03.84
-                if ([content length] == 8) {
-                    NSString *minute = [content substringWithRange:NSMakeRange(0, 2)];
-                    NSString *second = [content substringWithRange:NSMakeRange(3, 2)];
-                    NSString *mm = [content substringWithRange:NSMakeRange(6, 2)];
+                //if item is not empty
+                if ([item length]) {
                     
-                    NSString *time = [NSString stringWithFormat:@"%@:%@.%@",minute,second,mm];
-                    NSNumber *total =[NSNumber numberWithInteger:[minute integerValue] * 60 + [second integerValue]];
-                    [_t addObject:total];
+                    NSRange startrange = [item rangeOfString:@"["];
+                    NSLog(@"%d%d",startrange.length,startrange.location);
+                    NSRange stoprange = [item rangeOfString:@"]"];
                     
-                    NSString *lyric = [item substringFromIndex:10];
+                    NSString *content = [item substringWithRange:NSMakeRange(startrange.location+1, stoprange.location-startrange.location-1)];
                     
-                    [_musictime addObject:time];
-                    [_lyrics addObject:lyric];
+                    NSLog(@"%d",[item length]);
+                    
+                    //the music time format is mm.ss.xx such as 00:03.84
+                    if ([content length] == 8) {
+                        NSString *minute = [content substringWithRange:NSMakeRange(0, 2)];
+                        NSString *second = [content substringWithRange:NSMakeRange(3, 2)];
+                        NSString *mm = [content substringWithRange:NSMakeRange(6, 2)];
+                        
+                        NSString *time = [NSString stringWithFormat:@"%@:%@.%@",minute,second,mm];
+                        NSNumber *total =[NSNumber numberWithInteger:[minute integerValue] * 60 + [second integerValue]];
+                        [_t addObject:total];
+                        
+                        NSString *lyric = [item substringFromIndex:10];
+                        
+                        [_musictime addObject:time];
+                        [_lyrics addObject:lyric];
+                    }
                 }
             }
         }
+        else
+            _lyrics = nil;
     }
-    else
-        _lyrics = nil;
-}
 
 //display time and lyric
 -(void)display

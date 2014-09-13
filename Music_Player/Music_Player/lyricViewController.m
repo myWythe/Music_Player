@@ -105,13 +105,14 @@ static int lyricrow = 0;
     UIImage *artImageInMp3;
     NSURL *fileUrl = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:_musicname ofType:@"mp3"]];
     AVURLAsset *avURLAsset = [AVURLAsset URLAssetWithURL:fileUrl options:nil];
+    //can get title artist and albumname from here artwork is image
     for (NSString *format in [avURLAsset availableMetadataFormats]) {
         for (AVMetadataItem *metadataItem in [avURLAsset metadataForFormat:format]) {
-            if ([metadataItem.commonKey isEqualToString:@"artwork"]) {
-                artImageInMp3 = [UIImage imageWithData:[(NSDictionary*)metadataItem.value objectForKey:@"data"]];
-                NSLog(@"artImageInMp3 %@",artImageInMp3);
-                break;
-            }
+            NSLog(@"%@",metadataItem.commonKey);
+            //if ([metadataItem.commonKey isEqualToString:@"artwork"]) {
+               // artImageInMp3 = [UIImage imageWithData:[(NSDictionary*)metadataItem.value objectForKey:@"data"]];
+             //   break;
+            //}
         }
     }
     if ([_lyrics count]) {
@@ -132,7 +133,7 @@ static int lyricrow = 0;
         [self.view setBackgroundColor:[UIColor colorWithRed:250/256.0 green:255/256.0 blue:255/256.0 alpha:1]];
         [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"lyric.jpg"]]];
         
-        UILabel *lab_lyric = [[UILabel alloc]initWithFrame:CGRectMake(80, 300, 160, 30)];
+        UILabel *lab_lyric = [[UILabel alloc]initWithFrame:CGRectMake(135, 280, 160, 30)];
         lab_lyric.text = @"暂无歌词";
         
         [self.view addSubview:lab_lyric];
@@ -163,7 +164,7 @@ static int lyricrow = 0;
                               delay:0
                             options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
-                             [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.navigationController.view cache:NO];
+                             [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:self.navigationController.view cache:NO];
                          }
                          completion:^(BOOL finished) {
                          }];
