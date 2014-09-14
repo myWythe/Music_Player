@@ -15,7 +15,7 @@
 
 @implementation homeViewController
 
-@synthesize lab_title = _lab_title , lab_bottom_title = _lab_bottom_title , slider = _slider , lab_time = _lab_time , lab_lyc = _lab_lyc , btn_middle_pre = _btn_middle_pre , btn_middle_pause = _btn_middle_pause , btn_middle_next = _btn_middle_next , btn_bottom_pause = _btn_bottom_pause , btn_bottom_next = _btn_bottom_next;
+@synthesize lab_title = _lab_title , lab_bottom_title = _lab_bottom_title , slider = _slider , lab_time = _lab_time , lab_lyc = _lab_lyc , btn_middle_pre = _btn_middle_pre , btn_middle_pause = _btn_middle_pause , btn_middle_next = _btn_middle_next , img_albumpic = _img_albumpic, btn_bottom_pause = _btn_bottom_pause , btn_bottom_next = _btn_bottom_next , lab_bottom_artist = _lab_bottom_artist;
 @synthesize musicname = _musicname , previousindex = _previousindex, currentindex = _currentindex , mytimer = _mytimer , musictime = _musictime , lyrics = _lyrics , t = _t;;
 
 #pragma mark delegate method
@@ -30,6 +30,7 @@
 {
     return 1;
 }
+
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *cellidentifier = @"cellidentifier";
@@ -64,23 +65,6 @@
     return cell;
 }
 
-//action for swipe gesture
--(void)HandleSwipe:(id)sender
-{
-    UISwipeGestureRecognizer *swipe = (UISwipeGestureRecognizer *)sender;
-    
-    CGPoint location = [swipe locationInView:_tab];
-    NSIndexPath *indexpath = [_tab indexPathForRowAtPoint:location];
-    if (indexpath) {
-        //get the cell out of the table view
-        SongTableViewCell *cell = (SongTableViewCell *)[_tab cellForRowAtIndexPath:indexpath];
-        
-        //cell.frame.origin.x = -100;
-    }
-    NSLog(@"%@",indexpath);
-    NSLog(@"recieve swipe gesture");
-}
-
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
@@ -102,10 +86,10 @@
 {
     //set the song title
     _lab_title.text = [_musicname objectAtIndex:indexPath.row];
-    _lab_bottom_title.text = _lab_title.text;
     
-    //once choose a song,parse the lyric set a timer,and it will call a theord every 1 second
+    //once choose a song,parse the lyric ,update bottom and set a timer,and it will call a theord every 1 second
     [self parselyric];
+    [self updatebottomwithname:_lab_title.text];
     _mytimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(display) userInfo:nil repeats:YES];
     
     //get the resouce path for specific song,and the aloc the player use this path
@@ -173,11 +157,10 @@
         
         //update the playing song name
         _lab_title.text = name;
-        _lab_bottom_title.text = _lab_title.text;
         
-        //parse the lyric
+        //parse the lyric,update bottom
         [self parselyric];
-        
+        [self updatebottomwithname:_lab_title.text];
         //play the song
         NSURL *path = [[NSURL alloc]initFileURLWithPath:[[NSBundle mainBundle]pathForResource:name ofType:@"mp3"]];
         _player = [[AVAudioPlayer alloc] initWithContentsOfURL:path error:nil];
@@ -216,10 +199,18 @@ static int n = 0;
     //if choose delete
     if (buttonIndex == 0) {
         NSString *name = [_musicname objectAtIndex:n];
-        NSString *path = [NSString stringWithFormat:@"%@/%@.mp3",[[NSBundle mainBundle]resourcePath],name];
-        [[NSFileManager defaultManager]removeItemAtPath:path error:nil];
-        [_musicname removeObjectAtIndex:n];
-        [_tab reloadData];
+        
+        if ([name isEqualToString:_lab_title.text]) {
+            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Alert" message:@"music is playing ,can't be delete" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [alert show];
+        }
+        else
+        {
+            NSString *path = [NSString stringWithFormat:@"%@/%@.mp3",[[NSBundle mainBundle]resourcePath],name];
+            [[NSFileManager defaultManager]removeItemAtPath:path error:nil];
+            [_musicname removeObjectAtIndex:n];
+            [_tab reloadData];
+        }
     }
 }
 
@@ -244,12 +235,12 @@ static int n = 0;
             _lab_title.text = name;
             _lab_bottom_title.text = _lab_title.text;
             
-            NSURL *path = [[NSURL alloc]initFileURLWithPath:[[NSBundle mainBundle]pathForResource:name ofType:@"mp3"]];
-            
             //parse the lyric
             [self parselyric];
+            [self updatebottomwithname:_lab_title.text];
             
             //play the song
+            NSURL *path = [[NSURL alloc]initFileURLWithPath:[[NSBundle mainBundle]pathForResource:name ofType:@"mp3"]];
             _player = [[AVAudioPlayer alloc] initWithContentsOfURL:path error:nil];
             _player.delegate = self;
             [_player play];
@@ -285,10 +276,10 @@ static int n = 0;
             
             //update the playing song name
             _lab_title.text = name;
-            _lab_bottom_title.text = _lab_title.text;
             
             //parse the lyric
             [self parselyric];
+            [self updatebottomwithname:_lab_title.text];
             
             //play the song
             NSURL *path = [[NSURL alloc]initFileURLWithPath:[[NSBundle mainBundle]pathForResource:name ofType:@"mp3"]];
@@ -338,8 +329,6 @@ static int n = 0;
     
 }
 
-
-
 //when touch up,updata the music time and start the timer
 -(void)looseslider
 {
@@ -353,6 +342,7 @@ static int n = 0;
 -(void)dragslider
 {
     int count = 0;
+    
     //stop the timer when stop draging
     [_mytimer setFireDate:[NSDate distantFuture]];
     
@@ -384,59 +374,97 @@ static int n = 0;
     
 }
 
-#pragma mark parse and display lyric
-
-    -(void)parselyric
+//push to detail lyric view
+-(void)jump:(id)sender
+{
+    //pass values
+    lyricViewController *detallyric = [[lyricViewController alloc]initWithNibName:@"lyricViewController" bundle:nil];
+    detallyric.lyrics = [[NSMutableArray alloc]initWithArray:_lyrics];
+    detallyric.musictime = [[NSMutableArray alloc]initWithArray:_musictime];
+    detallyric.player = _player;
+    detallyric.musicname = _lab_title.text;
+    
+    //if click button to push,then filp
+    if ([sender isKindOfClass:[UIButton class]]) {
+        [UIView animateWithDuration:0.8f
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.navigationController.view cache:NO];
+                         }
+                         completion:^(BOOL finished) {
+                         }];
+    }
+    //if swipe uo to push,then curve
+    else if ([sender isKindOfClass:[UISwipeGestureRecognizer class]])
     {
-        NSString *path = [[NSBundle mainBundle]pathForResource:_lab_title.text ofType:@"lrc"];
+        [UIView animateWithDuration:1.0f
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             [UIView setAnimationTransition:UIViewAnimationTransitionCurlUp forView:self.navigationController.view cache:NO];
+                         }
+                         completion:^(BOOL finished) {
+                             
+                         }];
+    }
+    
+    [self.navigationController pushViewController:detallyric animated:YES];
+    
+}
+
+
+#pragma mark update information
+
+-(void)parselyric
+{
+    NSString *path = [[NSBundle mainBundle]pathForResource:_lab_title.text ofType:@"lrc"];
+    
+    //if lyric file exits
+    if ([path length]) {
         
-        //if lyric file exits
-        if ([path length]) {
+        //get the lyric string
+        NSString *lyc = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+        
+        //init
+        _musictime = [[NSMutableArray alloc]init];
+        _lyrics = [[NSMutableArray alloc]init];
+        _t = [[NSMutableArray alloc]init];
+        
+        NSArray *arr = [lyc componentsSeparatedByString:@"\n"];
+        
+        for (NSString *item in arr) {
             
-            //get the lyric string
-            NSString *lyc = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-            
-            //init
-            _musictime = [[NSMutableArray alloc]init];
-            _lyrics = [[NSMutableArray alloc]init];
-            _t = [[NSMutableArray alloc]init];
-            
-            NSArray *arr = [lyc componentsSeparatedByString:@"\n"];
-            
-            for (NSString *item in arr) {
+            //if item is not empty
+            if ([item length]) {
                 
-                //if item is not empty
-                if ([item length]) {
+                NSRange startrange = [item rangeOfString:@"["];
+                NSLog(@"%d%d",startrange.length,startrange.location);
+                NSRange stoprange = [item rangeOfString:@"]"];
+                
+                NSString *content = [item substringWithRange:NSMakeRange(startrange.location+1, stoprange.location-startrange.location-1)];
+                
+                NSLog(@"%d",[item length]);
+                
+                //the music time format is mm.ss.xx such as 00:03.84
+                //sice we can just match the minute and second ,so we needn't care xx,so mm:ss.xx ,mm:ss:xx and mm:ss are all ok
+                    NSString *minute = [content substringWithRange:NSMakeRange(0, 2)];
+                    NSString *second = [content substringWithRange:NSMakeRange(3, 2)];
                     
-                    NSRange startrange = [item rangeOfString:@"["];
-                    NSLog(@"%d%d",startrange.length,startrange.location);
-                    NSRange stoprange = [item rangeOfString:@"]"];
+                    NSString *time = [NSString stringWithFormat:@"%@:%@",minute,second];
+                    NSNumber *total =[NSNumber numberWithInteger:[minute integerValue] * 60 + [second integerValue]];
+                    [_t addObject:total];
                     
-                    NSString *content = [item substringWithRange:NSMakeRange(startrange.location+1, stoprange.location-startrange.location-1)];
+                    NSString *lyric = [item substringFromIndex:stoprange.location + 1];
                     
-                    NSLog(@"%d",[item length]);
-                    
-                    //the music time format is mm.ss.xx such as 00:03.84
-                    if ([content length] == 8) {
-                        NSString *minute = [content substringWithRange:NSMakeRange(0, 2)];
-                        NSString *second = [content substringWithRange:NSMakeRange(3, 2)];
-                        NSString *mm = [content substringWithRange:NSMakeRange(6, 2)];
-                        
-                        NSString *time = [NSString stringWithFormat:@"%@:%@.%@",minute,second,mm];
-                        NSNumber *total =[NSNumber numberWithInteger:[minute integerValue] * 60 + [second integerValue]];
-                        [_t addObject:total];
-                        
-                        NSString *lyric = [item substringFromIndex:10];
-                        
-                        [_musictime addObject:time];
-                        [_lyrics addObject:lyric];
-                    }
-                }
+                    [_musictime addObject:time];
+                    [_lyrics addObject:lyric];
             }
         }
-        else
-            _lyrics = nil;
     }
+    else
+        _lyrics = nil;
+}
 
 //display time and lyric
 -(void)display
@@ -465,10 +493,7 @@ static int n = 0;
         
         for (NSString *item in _musictime) {
             
-            //get the time that is going to match
-            NSString *match = [item substringWithRange:NSMakeRange(0, 5)];
-            //match the time
-            if ([time isEqualToString:match]) {
+            if ([time isEqualToString:item]) {
                 _lab_lyc.text = [_lyrics objectAtIndex:[_musictime indexOfObject:item]];
                 break;
             }
@@ -498,6 +523,31 @@ static int n = 0;
     }
 }
 
+-(void)updatebottomwithname:(NSString *)musicname
+{
+    //下面的可以获取专辑图片，上面的可以获取专辑名等信息
+    NSURL *fileUrl = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:musicname ofType:@"mp3"]];
+    AVURLAsset *avURLAsset = [AVURLAsset URLAssetWithURL:fileUrl options:nil];
+    for (NSString *format in [avURLAsset availableMetadataFormats]) {
+        for (AVMetadataItem *metadataItem in [avURLAsset metadataForFormat:format]) {
+            if ([metadataItem.commonKey isEqualToString:@"artwork"]) {
+                UIImage *artImageInMp3 = [UIImage imageWithData:[(NSDictionary*)metadataItem.value objectForKey:@"data"]];
+                _img_albumpic.image = artImageInMp3;
+            }
+            if ([metadataItem.commonKey isEqualToString:@"artist"]) {
+                NSString *artist = [metadataItem.value copyWithZone:nil];
+                _lab_bottom_artist.text = artist;
+            }
+            if ([metadataItem.commonKey isEqualToString:@"title"]) {
+                NSString *title = [metadataItem.value copyWithZone:nil];
+                _lab_bottom_title.text = title;
+            }
+        }
+    }
+}
+
+#pragma mark init
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -509,40 +559,6 @@ static int n = 0;
 
 - (void)viewDidLoad
 {
-//    //尝试读取mp3文件中的专辑图片
-//    NSURL *fileURL = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:@"Yellow" ofType:@"mp3"]];
-//    AudioFileTypeID fileTypeHint = kAudioFileMP3Type;
-//    
-//    AudioFileID fileID = nil;
-//    OSStatus err = noErr;
-//    
-//    err = AudioFileOpenURL((__bridge CFURLRef)fileURL, kAudioFileReadPermission, 0, &fileID);
-//    
-//    UInt32 id3DataSize = 0;
-//    err = AudioFileGetPropertyInfo(fileID, kAudioFilePropertyID3Tag, &id3DataSize, NULL);
-//    NSDictionary *piDict = nil;
-//    UInt32 piDataSize = sizeof(piDict);
-//    err = AudioFileGetProperty(fileID, kAudioFilePropertyInfoDictionary, &piDataSize, &piDict);
-//    CFDataRef AlbumPic = nil;
-//    UInt32 picDataSize = sizeof(picDataSize);
-//    err = AudioFileGetProperty(fileID, kAudioFilePropertyAlbumArtwork, &picDataSize, &AlbumPic);
-//    NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:err userInfo:nil];
-//    NSLog(@"Error: %@", [error description]);
-//    NSData *imgdata = (__bridge NSData *)AlbumPic;
-    //下面的可以获取专辑图片，上面的可以获取专辑名等信息
-    UIImage *artImageInMp3;
-    NSURL *fileUrl = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:@"Yellow" ofType:@"mp3"]];
-    AVURLAsset *avURLAsset = [AVURLAsset URLAssetWithURL:fileUrl options:nil];
-    for (NSString *format in [avURLAsset availableMetadataFormats]) {
-        for (AVMetadataItem *metadataItem in [avURLAsset metadataForFormat:format]) {
-            if ([metadataItem.commonKey isEqualToString:@"artwork"]) {
-                artImageInMp3 = [UIImage imageWithData:[(NSDictionary*)metadataItem.value objectForKey:@"data"]];
-                NSLog(@"artImageInMp3 %@",artImageInMp3);
-                break;
-            }
-        }
-    }
-    
     [super viewDidLoad];
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor colorWithRed:102/256.0 green:102/256.0 blue:153/256.0 alpha:1] forKey:NSForegroundColorAttributeName]];
     self.navigationItem.title = @"有妖气播放器";
@@ -552,9 +568,6 @@ static int n = 0;
     
     //create imgview to contain title , slider buttons etc..
     UIImageView *img_container = [[UIImageView alloc]initWithFrame:CGRectMake(0, 60, 320, 250)];
-//    img_container.image = artImageInMp3;
-//    img_container.alpha = 0.5;
-    //img_container.image = [UIImage imageWithData:imgdata];
     img_container.image = [UIImage imageNamed:@"background.jpeg"];
     img_container.userInteractionEnabled = YES;
     
@@ -600,54 +613,7 @@ static int n = 0;
         forControlEvents:UIControlEventTouchUpInside];
     _btn_middle_next.frame = CGRectMake(270, 140, 30, 30);
     
-    
-//    UIImageView *img_status = [[UIImageView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height-50, 320, 50)];
-//    [img_status setBackgroundColor:[UIColor clearColor]];
-//    UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(jump:)];
-//    recognizer.Direction = UISwipeGestureRecognizerDirectionUp;
-//    img_status.userInteractionEnabled =YES;
-//    [img_status addGestureRecognizer:recognizer];
-    
-        UIButton *btn_bottom_conteiner = [[UIButton alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height-50, 320, 50)];
-        [btn_bottom_conteiner setBackgroundColor:[UIColor clearColor]];
-        UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(jump:)];
-        recognizer.Direction = UISwipeGestureRecognizerDirectionUp;
-        btn_bottom_conteiner.userInteractionEnabled =YES;
-        [btn_bottom_conteiner addGestureRecognizer:recognizer];
-    [btn_bottom_conteiner addTarget:self action:@selector(jump:) forControlEvents:UIControlEventTouchUpInside];
-    
-    UIImageView *img_albumpic = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 50, 50)];
-    img_albumpic.image = artImageInMp3;
-    
-    _lab_bottom_title = [[UILabel alloc]initWithFrame:CGRectMake(55, 10,130, 15)];
-    _lab_bottom_title.text = _lab_title.text;
-    _lab_bottom_title.adjustsFontSizeToFitWidth = YES;
-    
-    _btn_bottom_pause = [UIButton buttonWithType:UIButtonTypeSystem];
-    _btn_bottom_pause.frame = CGRectMake(220, 10, 30, 30);
-    [_btn_bottom_pause addTarget:self action:@selector(play_or_pause_Onclick:) forControlEvents:UIControlEventTouchUpInside];
-    //btn_botton_play setBackgroundImage:[UIImage ] forState:[
-    
-    _btn_bottom_next = [UIButton buttonWithType:UIButtonTypeSystem];
-    _btn_bottom_next.frame = CGRectMake(280, 10, 30, 30);
-    [_btn_bottom_next addTarget:self action:@selector(next_Onclick) forControlEvents:UIControlEventTouchUpInside];
-    
-//    [img_status addSubview:img_albumpic];
-//    [img_status addSubview:_lab_bottom_title];
-//    [img_status addSubview:_btn_bottom_pause];
-//    [img_status addSubview:_btn_bottom_next];
-    
-    [btn_bottom_conteiner addSubview:img_albumpic];
-    [btn_bottom_conteiner addSubview:_lab_bottom_title];
-    [btn_bottom_conteiner addSubview:_btn_bottom_pause];
-    [btn_bottom_conteiner addSubview:_btn_bottom_next];
-    
-    //create table view
-    _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 250, 350, 270) style:UITableViewStylePlain];
-    _tab.delegate = self;
-    _tab.dataSource = self;
-    
-    
+    //add views to img container
     [img_container addSubview:_lab_title];
     [img_container addSubview:_lab_time];
     [img_container addSubview:_slider];
@@ -656,49 +622,61 @@ static int n = 0;
     [img_container addSubview:_btn_middle_pause];
     [img_container addSubview:_btn_middle_next];
     
+    //create table view
+    _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 250, 350, 270) style:UITableViewStylePlain];
+    _tab.delegate = self;
+    _tab.dataSource = self;
+    
+    //container button
+    
+    UIButton *btn_bottom_conteiner = [[UIButton alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height-50, 320, 50)];
+    [btn_bottom_conteiner setBackgroundColor:[UIColor colorWithRed:250/256.0 green:255/256.0 blue:255/256.0 alpha:1]];
+    
+    //add gesture for container button
+    UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(jump:)];
+    recognizer.Direction = UISwipeGestureRecognizerDirectionUp;
+    
+    btn_bottom_conteiner.userInteractionEnabled =YES;
+    [btn_bottom_conteiner addGestureRecognizer:recognizer];
+    [btn_bottom_conteiner addTarget:self action:@selector(jump:) forControlEvents:UIControlEventTouchUpInside];
+    
+    //album picture
+    _img_albumpic = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 50, 50)];
+    
+    //title lable
+    _lab_bottom_title = [[UILabel alloc]initWithFrame:CGRectMake(65, 5,130, 15)];
+    [_lab_bottom_title setTextColor:[UIColor colorWithRed:0 green:51/256.0 blue:102/256.0 alpha:1]];
+    _lab_bottom_title.text = _lab_title.text;
+    _lab_bottom_title.adjustsFontSizeToFitWidth = YES;
+    
+    //aettist label
+    _lab_bottom_artist = [[UILabel alloc]initWithFrame:CGRectMake(65, 25, 50, 10)];
+    [_lab_bottom_artist setTextColor:[UIColor colorWithRed:0 green:51/256.0 blue:102/256.0 alpha:1]];
+    [_lab_bottom_artist setFont:[UIFont boldSystemFontOfSize:10]];
+    _lab_bottom_artist.textAlignment = NSTextAlignmentCenter;
+    
+    //pause or play button
+    _btn_bottom_pause = [UIButton buttonWithType:UIButtonTypeSystem];
+    _btn_bottom_pause.frame = CGRectMake(220, 10, 30, 30);
+    [_btn_bottom_pause addTarget:self action:@selector(play_or_pause_Onclick:) forControlEvents:UIControlEventTouchUpInside];
+    
+    //next button
+    _btn_bottom_next = [UIButton buttonWithType:UIButtonTypeSystem];
+    _btn_bottom_next.frame = CGRectMake(280, 10, 30, 30);
+    [_btn_bottom_next addTarget:self action:@selector(next_Onclick) forControlEvents:UIControlEventTouchUpInside];
+    
+    //add view to container button
+    [btn_bottom_conteiner addSubview:_img_albumpic];
+    [btn_bottom_conteiner addSubview:_lab_bottom_title];
+    [btn_bottom_conteiner addSubview:_lab_bottom_artist];
+    [btn_bottom_conteiner addSubview:_btn_bottom_pause];
+    [btn_bottom_conteiner addSubview:_btn_bottom_next];
+    
+    //add vies to main button
     [self.view addSubview:img_container];
-    
     [self.view addSubview:_tab];
-    
     [self.view addSubview:btn_bottom_conteiner];
 }
-
--(void)jump:(id)sender
-{
-    lyricViewController *detallyric = [[lyricViewController alloc]initWithNibName:@"lyricViewController" bundle:nil];
-    detallyric.lyrics = [[NSMutableArray alloc]initWithArray:_lyrics];
-    detallyric.musictime = [[NSMutableArray alloc]initWithArray:_musictime];
-    detallyric.player = _player;
-    detallyric.musicname = _lab_title.text;
-    //[self.navigationController pushViewController:detallyric animated:YES];
-
-    if ([sender isKindOfClass:[UIButton class]]) {
-        [UIView animateWithDuration:0.8f
-                              delay:0
-                            options:UIViewAnimationOptionCurveEaseInOut
-                         animations:^{
-                             [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.navigationController.view cache:NO];
-                         }
-                         completion:^(BOOL finished) {
-                         }];
-    }
-    else if ([sender isKindOfClass:[UISwipeGestureRecognizer class]])
-    {
-        [UIView animateWithDuration:1.0f
-                              delay:0
-                            options:UIViewAnimationOptionCurveEaseInOut
-                         animations:^{
-                              [UIView setAnimationTransition:UIViewAnimationTransitionCurlUp forView:self.navigationController.view cache:NO];
-                         }
-                         completion:^(BOOL finished) {
-                             
-                         }];
-    }
-    [self.navigationController pushViewController:detallyric animated:YES];
-    
-}
-
-
 
 - (void)didReceiveMemoryWarning
 {

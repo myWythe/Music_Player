@@ -102,19 +102,6 @@ static int lyricrow = 0;
     
     _gestureback = NO;
     
-    UIImage *artImageInMp3;
-    NSURL *fileUrl = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:_musicname ofType:@"mp3"]];
-    AVURLAsset *avURLAsset = [AVURLAsset URLAssetWithURL:fileUrl options:nil];
-    //can get title artist and albumname from here artwork is image
-    for (NSString *format in [avURLAsset availableMetadataFormats]) {
-        for (AVMetadataItem *metadataItem in [avURLAsset metadataForFormat:format]) {
-            NSLog(@"%@",metadataItem.commonKey);
-            //if ([metadataItem.commonKey isEqualToString:@"artwork"]) {
-               // artImageInMp3 = [UIImage imageWithData:[(NSDictionary*)metadataItem.value objectForKey:@"data"]];
-             //   break;
-            //}
-        }
-    }
     if ([_lyrics count]) {
         _tab = [[UITableView alloc]initWithFrame:self.view.frame style:UITableViewStylePlain];
         _tab.delegate =self;

@@ -198,7 +198,6 @@
 		FD36C0CF19BEE8E8000DEE4F /* Music_Player */ = {
 			isa = PBXGroup;
 			children = (
-				FD1887A719C316A9005FBF7F /* lyric.jpg */,
 				FD42800019C13ECF0014CE84 /* lyricViewController.h */,
 				FD42800119C13ECF0014CE84 /* lyricViewController.m */,
 				FD42800219C13ECF0014CE84 /* lyricViewController.xib */,
@@ -249,6 +248,7 @@
 		FD42800519C16CCD0014CE84 /* resourse */ = {
 			isa = PBXGroup;
 			children = (
+				FD1887A719C316A9005FBF7F /* lyric.jpg */,
 				FD427FF819C1394F0014CE84 /* next.png */,
 				FD427FF919C1394F0014CE84 /* pause.png */,
 				FD427FFA19C1394F0014CE84 /* play.png */,

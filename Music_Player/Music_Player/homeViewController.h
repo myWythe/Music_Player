@@ -25,6 +25,8 @@
 @property  UITableView *tab;
 @property  UISlider *slider;
 @property  UILabel *lab_lyc;
+@property  UIImageView *img_albumpic;
+@property  UILabel *lab_bottom_artist;
 
 @property  AVAudioPlayer *player;
 
