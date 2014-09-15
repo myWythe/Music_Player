@@ -333,6 +333,13 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = nyqiqiang;
 				TargetAttributes = {
+					FD36C0C519BEE8E8000DEE4F = {
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
 					FD36C0E019BEE8E8000DEE4F = {
 						TestTargetID = FD36C0C519BEE8E8000DEE4F;
 					};

@@ -97,6 +97,7 @@
     _player = [[AVAudioPlayer alloc] initWithContentsOfURL:path error:nil];
     _player.delegate = self;
     
+    
     //play the song
     [_player play];
     
