@@ -531,10 +531,10 @@ static int n = 0;
     AVURLAsset *avURLAsset = [AVURLAsset URLAssetWithURL:fileUrl options:nil];
     for (NSString *format in [avURLAsset availableMetadataFormats]) {
         for (AVMetadataItem *metadataItem in [avURLAsset metadataForFormat:format]) {
-            if ([metadataItem.commonKey isEqualToString:@"artwork"]) {
-                UIImage *artImageInMp3 = [UIImage imageWithData:[(NSDictionary*)metadataItem.value objectForKey:@"data"]];
-                _img_albumpic.image = artImageInMp3;
-            }
+//            if ([metadataItem.commonKey isEqualToString:@"artwork"]) {
+//                UIImage *artImageInMp3 = [UIImage imageWithData:[(NSDictionary*)metadataItem.value objectForKey:@"data"]];
+//                _img_albumpic.image = artImageInMp3;
+//            }
             if ([metadataItem.commonKey isEqualToString:@"artist"]) {
                 NSString *artist = [metadataItem.value copyWithZone:nil];
                 _lab_bottom_artist.text = artist;
@@ -561,8 +561,15 @@ static int n = 0;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+    
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    [session setActive:YES error:nil];
+    [session setCategory:AVAudioSessionCategoryPlayback error:nil];
+    
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor colorWithRed:102/256.0 green:102/256.0 blue:153/256.0 alpha:1] forKey:NSForegroundColorAttributeName]];
-    self.navigationItem.title = @"有妖气播放器";
+    self.navigationItem.title = @"小乱";
 
     //scan and get the song name
     [self getMusicName];

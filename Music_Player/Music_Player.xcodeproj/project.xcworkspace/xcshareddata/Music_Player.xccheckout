@@ -10,29 +10,29 @@
 	<string>Music_Player</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>CFFAD90A-4536-475E-BC44-B4ED3E72313A</key>
+		<key>A0C6CF27C8C35AFD5192FDB3FA6D81758CF2A880</key>
 		<string>https://github.com/myqiqiang/Music_Player.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Music_Player/Music_Player.xcodeproj/project.xcworkspace</string>
+	<string>Music_Player/Music_Player.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>CFFAD90A-4536-475E-BC44-B4ED3E72313A</key>
+		<key>A0C6CF27C8C35AFD5192FDB3FA6D81758CF2A880</key>
 		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/myqiqiang/Music_Player.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>CFFAD90A-4536-475E-BC44-B4ED3E72313A</string>
+	<string>A0C6CF27C8C35AFD5192FDB3FA6D81758CF2A880</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>CFFAD90A-4536-475E-BC44-B4ED3E72313A</string>
+			<string>A0C6CF27C8C35AFD5192FDB3FA6D81758CF2A880</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Music_Player</string>
 		</dict>
